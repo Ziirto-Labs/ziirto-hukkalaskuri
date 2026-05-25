@@ -356,7 +356,7 @@
   }
   .bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--color-tutkimus), #003D5C);
+    background: #EB506E;
     border-radius: 4px;
     transition: width 0.6s ease;
     display: flex;
@@ -367,8 +367,8 @@
     font-weight: 600;
     white-space: nowrap;
   }
-  .bar-fill.bench { background: linear-gradient(90deg, #6B7785, #94A3B8); }
-  .bar-fill.world { background: linear-gradient(90deg, var(--color-korosteet), #7FE89A); color: var(--color-tutkimus); }
+  .bar-fill.bench { background: #6B7785; }
+  .bar-fill.world { background: #002337; color: white; }
 
   /* ===== MEANINGFULNESS PANEL ===== */
   .meaningfulness-grid {
@@ -764,6 +764,12 @@
     line-height: 1.5;
     padding-top: 12px;
     border-top: 1px solid #E5E7EB;
+  }
+  .rep-copyright {
+    margin-top: 6px;
+    font-size: 8px;
+    color: #94A3B8;
+    font-weight: 500;
   }
 </style>
 </head>
@@ -1406,7 +1412,16 @@ function generateReport() {
   const ind = INDUSTRY_DATA[tab];
   const co = state.companyName;
   const today = new Date().toLocaleDateString('fi-FI');
+  const currentYear = new Date().getFullYear();
   const meaningfulnessScore = calculateMeaningfulnessScore();
+
+  // Toimialan tarkka nimi raporttiin — laivanrakennus erotellaan rakentamisesta
+  let industryLabel = ind.label;
+  if (tab === 'rakentaminen' && s.type === 'laivanrakennus') {
+    industryLabel = 'Laivanrakennus';
+  } else if (tab === 'rakentaminen' && s.type === 'talonrakennus') {
+    industryLabel = 'Talonrakennus';
+  }
   const absence = calcAbsenceRisk(s.employees, meaningfulnessScore);
 
   // Total hidden hukka, M€
@@ -1441,7 +1456,7 @@ function generateReport() {
       <div class="rep-header">
         <div class="rep-title-block">
           <h1>Piilohukka-arvio</h1>
-          <div class="subtitle">${co} · ${ind.label} · ${today}</div>
+          <div class="subtitle">${co} · ${industryLabel} · ${today}</div>
         </div>
         ${logoHtml}
       </div>
@@ -1479,6 +1494,7 @@ function generateReport() {
 
       <div class="rep-footer">
         Lähteet: Crosby, Quality Digest 1999 · Taylor &amp; Francis 2025 · ASCE 2026 · McKinsey 2017 · ${ind.sourceKey} · Gallup 2020 · Kela 2023
+        <div class="rep-copyright">Copyright © ${currentYear} Ziirto Oy</div>
       </div>
     </div>
 
@@ -1554,6 +1570,7 @@ function generateReport() {
 
       <div class="rep-footer">
         Crosby, Quality Digest 1999 · Taylor &amp; Francis 2025 (1097 NCR, 41 % toistuvuus) · ASCE 2026 (rework aliraportoitu 4×) · McKinsey 2017 · ${ind.sourceKey} · Gallup 2020 · Kela 2023 (sairauspoissaolokeskiarvo 9,5 pv) · eMoldino 2025 (scrap+rework 2,2 %)
+        <div class="rep-copyright">Copyright © ${currentYear} Ziirto Oy</div>
       </div>
     </div>
   `;
@@ -1562,7 +1579,7 @@ function generateReport() {
   // Asetetaan dokumentin otsikko hetkellisesti — tämä määrää PDF:n
   // oletustallennusnimen kun käyttäjä valitsee "Tallenna PDF:nä".
   const originalTitle = document.title;
-  document.title = `Piilohukka-arvio_${safeName}_${ind.label.replace(/ \/ /g, '_').replace(/ /g, '_')}_${today.replace(/\./g, '-')}`;
+  document.title = `Piilohukka-arvio_${safeName}_${industryLabel.replace(/ \/ /g, '_').replace(/ /g, '_')}_${today.replace(/\./g, '-')}`;
 
   console.log('[Print] Avataan tulostusdialogi asiakkaalle:', co);
 
