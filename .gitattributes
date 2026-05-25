@@ -1,0 +1,8 @@
+# Varmistaa että rivinvaihdot pysyvät oikeina cross-platform
+* text=auto eol=lf
+
+# Binääritiedostot
+*.png binary
+*.jpg binary
+*.pdf binary
+*.zip binary

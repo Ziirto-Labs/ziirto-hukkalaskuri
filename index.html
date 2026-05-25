@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HukkaLaskuri — Ziirto Oy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-tutkimus: #002337;
+    --color-tekeminen: #EB506E;
+    --color-teknologia: #D0CAC6;
+    --color-korosteet: #AAFAB4;
+    --color-bg: #FFFFFF;
+    --color-bg-alt: #F7F7F5;
+    --color-text: #002337;
+    --color-text-muted: #6B7785;
+    --color-border: #E5E7EB;
+    --shadow-sm: 0 1px 2px rgba(0, 35, 55, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 35, 55, 0.08);
+    --radius-card: 16px;
+    --radius-input: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--color-text);
+    background: var(--color-bg-alt);
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  /* ===== TOP NAV ===== */
+  .topnav {
+    background: var(--color-tutkimus);
+    color: white;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .ziirto-logo {
+    height: 36px;
+    width: auto;
+    color: white;
+    display: block;
+  }
+  .logo-tagline {
+    font-size: 11px;
+    opacity: 0.75;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: white;
+  }
+  .nav-title {
+    font-weight: 600;
+    font-size: 14px;
+    opacity: 0.9;
+  }
+
+  /* ===== TABS ===== */
+  .tabs {
+    background: white;
+    border-bottom: 1px solid var(--color-border);
+    padding: 0 32px;
+    display: flex;
+    gap: 8px;
+  }
+  .tab {
+    padding: 18px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: inherit;
+  }
+  .tab:hover { color: var(--color-tutkimus); }
+  .tab.active {
+    color: var(--color-tutkimus);
+    border-bottom-color: var(--color-tekeminen);
+  }
+
+  /* ===== MAIN LAYOUT ===== */
+  .main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 32px;
+  }
+  .company-bar {
+    background: white;
+    border-radius: var(--radius-card);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .company-bar label {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-tutkimus);
+    min-width: 140px;
+  }
+  .company-input {
+    flex: 1;
+    min-width: 280px;
+    padding: 10px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-input);
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--color-text);
+    transition: border-color 0.2s;
+  }
+  .company-input:focus {
+    outline: none;
+    border-color: var(--color-tekeminen);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* ===== PANELS ===== */
+  .panel {
+    background: white;
+    border-radius: var(--radius-card);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .panel h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-tutkimus);
+    margin-bottom: 18px;
+    letter-spacing: -0.01em;
+  }
+  .panel h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-tutkimus);
+    margin: 20px 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .panel h3:first-child { margin-top: 0; }
+
+  /* ===== INPUT FIELDS ===== */
+  .field { margin-bottom: 18px; }
+  .field-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .field-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text);
+  }
+  .field-value {
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--color-tutkimus);
+    cursor: text;
+    padding: 2px 8px;
+    border-radius: 4px;
+    transition: background 0.15s;
+  }
+  .field-value:hover { background: var(--color-bg-alt); }
+  .field-value.editing {
+    background: white;
+    outline: 2px solid var(--color-tekeminen);
+  }
+  .field-value-input {
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--color-tutkimus);
+    border: none;
+    outline: 2px solid var(--color-tekeminen);
+    background: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    width: 100px;
+    text-align: right;
+  }
+  .slider {
+    width: 100%;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--color-teknologia);
+    border-radius: 2px;
+    outline: none;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--color-tutkimus);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  .slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: var(--color-tutkimus);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+  .hint {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: 4px;
+  }
+
+  /* ===== RADIO BUTTONS ===== */
+  .radio-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .radio-btn {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-input);
+    background: white;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .radio-btn:hover { border-color: var(--color-tutkimus); }
+  .radio-btn.active {
+    background: var(--color-tutkimus);
+    color: white;
+    border-color: var(--color-tutkimus);
+  }
+
+  /* ===== RESET BUTTON ===== */
+  .reset-btn {
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    padding: 8px 14px;
+    border-radius: var(--radius-input);
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: 8px;
+  }
+  .reset-btn:hover {
+    color: var(--color-tutkimus);
+    border-color: var(--color-tutkimus);
+  }
+
+  /* ===== RESULTS PANEL ===== */
+  .results-panel { display: flex; flex-direction: column; gap: 24px; }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 1100px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .kpi-grid { grid-template-columns: 1fr; } }
+
+  .kpi-card {
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 4px solid;
+    background: var(--color-bg-alt);
+  }
+  .kpi-card.poikkeamat { border-left-color: #F59E0B; }
+  .kpi-card.aika { border-left-color: var(--color-tekeminen); }
+  .kpi-card.asiakas { border-left-color: #FBBF24; }
+  .kpi-card.henkilosto { border-left-color: var(--color-tutkimus); }
+
+  .kpi-label {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .kpi-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--color-tutkimus);
+    letter-spacing: -0.02em;
+  }
+  .kpi-unit {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+    font-weight: 500;
+  }
+  .kpi-note {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    margin-top: 10px;
+    line-height: 1.4;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-border);
+    font-weight: 400;
+  }
+
+  /* ===== CHART AREAS ===== */
+  .chart-container {
+    height: 280px;
+    margin: 12px 0;
+  }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    margin: 12px 0;
+    gap: 16px;
+  }
+  .bar-label {
+    width: 200px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text);
+    flex-shrink: 0;
+  }
+  .bar-wrap {
+    flex: 1;
+    height: 28px;
+    background: var(--color-bg-alt);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-tutkimus), #003D5C);
+    border-radius: 4px;
+    transition: width 0.6s ease;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .bar-fill.bench { background: linear-gradient(90deg, #6B7785, #94A3B8); }
+  .bar-fill.world { background: linear-gradient(90deg, var(--color-korosteet), #7FE89A); color: var(--color-tutkimus); }
+
+  /* ===== MEANINGFULNESS PANEL ===== */
+  .meaningfulness-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 900px) { .meaningfulness-grid { grid-template-columns: 1fr; } }
+
+  .gauge-container {
+    text-align: center;
+    padding: 14px;
+    background: var(--color-bg-alt);
+    border-radius: 12px;
+  }
+  .gauge-value {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--color-tutkimus);
+    letter-spacing: -0.02em;
+  }
+  .gauge-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .gauge-label.low { color: var(--color-korosteet); color: #22C55E; }
+  .gauge-label.mid { color: #F59E0B; }
+  .gauge-label.high { color: var(--color-tekeminen); }
+
+  /* ===== SOURCES ===== */
+  .sources {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-border);
+    margin-top: 16px;
+  }
+
+  /* ===== DISCLAIMER ===== */
+  .disclaimer {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    font-style: italic;
+    padding: 12px 16px;
+    background: var(--color-bg-alt);
+    border-radius: 8px;
+    border-left: 3px solid var(--color-teknologia);
+  }
+
+  /* ===== REPORT BUTTON ===== */
+  .report-btn {
+    background: var(--color-tekeminen);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: var(--radius-input);
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-md);
+    width: 100%;
+  }
+  .report-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(235, 80, 110, 0.3);
+  }
+  .report-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ===== REPORT TEMPLATE (näkyvissä vain tulostustilassa) =====
+     window.print()-malli: template on piilotettu normaalisti, mutta
+     print-mediassa se näytetään ja kaikki muu piilotetaan. */
+  .report-template {
+    display: none;
+  }
+
+  @media print {
+    /* KRIITTINEN: pakotetaan selain näyttämään taustavärit ja kuvat
+       tulostuksessa. Ilman tätä siniset/punaiset taustat katoavat
+       ja niiden päällä oleva valkoinen teksti muuttuu näkymättömäksi.
+       Toimii Chromessa, Edgessä, Safarissa, Firefoxissa. */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+    /* Piilota kaikki muu paitsi raporttitemplate */
+    body > *:not(.report-template) {
+      display: none !important;
+    }
+    .report-template {
+      display: block !important;
+      width: 100%;
+      background: white;
+      color: #002337;
+      font-family: 'Inter Tight', system-ui, sans-serif;
+    }
+    body {
+      background: white !important;
+      margin: 0;
+      padding: 0;
+    }
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+  }
+
+  .report-page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 18mm 20mm;
+    page-break-after: always;
+    page-break-inside: avoid;
+    position: relative;
+    box-sizing: border-box;
+    background: white;
+  }
+  .report-page:last-child {
+    page-break-after: auto;
+  }
+
+  .rep-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+  }
+  .rep-title-block h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+    color: #002337;
+  }
+  .rep-title-block .subtitle {
+    font-size: 13px;
+    color: #6B7785;
+    font-weight: 500;
+  }
+  .rep-logo-img {
+    max-width: 160px;
+    height: auto;
+    display: block;
+  }
+  .rep-logo-text {
+    font-size: 18px;
+    font-weight: 800;
+    color: #002337;
+    letter-spacing: -0.02em;
+    text-align: right;
+  }
+  .rep-logo-text span { color: #EB506E; }
+  .rep-logo-text .tagline {
+    font-size: 9px;
+    font-weight: 500;
+    color: #6B7785;
+    margin-top: 2px;
+  }
+
+  .rep-headline {
+    background: #002337;
+    color: white;
+    padding: 22px 28px;
+    border-radius: 12px;
+    margin: 20px 0;
+  }
+  .rep-headline .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.7;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: white;
+  }
+  .rep-headline .number {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: white;
+  }
+  .rep-headline .footnote {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-top: 10px;
+    font-weight: 500;
+    color: white;
+  }
+
+  .rep-three-numbers {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .rep-num-card {
+    background: #F7F7F5;
+    padding: 18px;
+    border-radius: 10px;
+    border-top: 3px solid #EB506E;
+  }
+  .rep-num-card .title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6B7785;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .rep-num-card .value {
+    font-size: 26px;
+    font-weight: 800;
+    color: #002337;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .rep-num-card .desc {
+    font-size: 11px;
+    color: #6B7785;
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  .rep-section-title {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: #002337;
+    margin: 24px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #EB506E;
+  }
+
+  .rep-narrative {
+    margin: 18px 0;
+  }
+  .rep-narrative-p {
+    font-size: 12px;
+    line-height: 1.65;
+    color: #002337;
+    margin-bottom: 11px;
+    text-align: justify;
+  }
+  .rep-narrative-p:last-child {
+    margin-bottom: 0;
+  }
+
+  .rep-compare-bars { margin: 16px 0; }
+  .rep-compare-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0;
+  }
+  .rep-compare-label {
+    width: 140px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #002337;
+  }
+  .rep-compare-track {
+    flex: 1;
+    height: 22px;
+    background: #F0EFEB;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .rep-compare-fill {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .rep-compare-fill.actual { background: #EB506E; }
+  .rep-compare-fill.typical { background: #6B7785; }
+  .rep-compare-fill.world { background: #002337; }
+
+  .rep-compare-summary {
+    font-size: 12px;
+    font-style: italic;
+    color: #6B7785;
+    margin-top: 10px;
+  }
+
+  .rep-context-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .rep-context-card {
+    background: #F7F7F5;
+    padding: 16px;
+    border-radius: 8px;
+  }
+  .rep-context-card .title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    color: #002337;
+    margin-bottom: 6px;
+  }
+  .rep-context-card .text {
+    font-size: 11px;
+    line-height: 1.5;
+    color: #002337;
+  }
+
+  .rep-reference-block {
+    background: #002337;
+    color: white;
+    padding: 20px 24px;
+    border-radius: 10px;
+    margin: 20px 0;
+  }
+  .rep-reference-block .title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.7;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: white;
+  }
+  .rep-reference-block .text {
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    color: white;
+  }
+  .rep-savings-table {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 6px;
+    font-size: 11px;
+    color: white;
+  }
+  .rep-savings-table .label { opacity: 0.8; }
+  .rep-savings-table .value { font-weight: 700; text-align: right; }
+  .rep-savings-table .highlight { color: #AAFAB4; font-size: 13px; }
+
+  .rep-cta {
+    background: #EB506E;
+    color: white;
+    padding: 22px 24px;
+    border-radius: 10px;
+    margin-top: 24px;
+  }
+  .rep-cta .title {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: white;
+    letter-spacing: -0.01em;
+  }
+  .rep-cta .text {
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    color: white;
+  }
+  .rep-cta .contact {
+    font-size: 12px;
+    font-weight: 600;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+  }
+
+  .rep-footer {
+    position: absolute;
+    bottom: 30px;
+    left: 60px;
+    right: 60px;
+    font-size: 9px;
+    color: #6B7785;
+    line-height: 1.5;
+    padding-top: 12px;
+    border-top: 1px solid #E5E7EB;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== TOP NAV ===== -->
+<div class="topnav">
+  <div class="logo-area">
+    <!-- Ziirto-logo, SVG upotettuna. Valkoinen versio tummaa taustaa vasten.
+         Tämä on Claude-tehty replikointi Ziirton oikeasta logosta — vaihda
+         viralliseen SVG/PNG-tiedostoon kun saatavilla. -->
+    <svg class="ziirto-logo" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Ziirto">
+      <!-- Z -->
+      <path d="M 5 8 L 35 8 L 35 18 L 18 42 L 35 42 L 35 52 L 5 52 L 5 42 L 22 18 L 5 18 Z" fill="currentColor"/>
+      <!-- I-pylväs 1 -->
+      <path d="M 42 8 L 52 8 L 52 48 L 47 52 L 42 48 Z" fill="currentColor"/>
+      <!-- I-pylväs 2 -->
+      <path d="M 58 8 L 68 8 L 68 48 L 63 52 L 58 48 Z" fill="currentColor"/>
+      <!-- R -->
+      <path d="M 75 8 L 95 8 Q 108 8 108 22 Q 108 32 100 36 L 110 52 L 98 52 L 90 38 L 86 38 L 86 52 L 75 52 Z M 86 18 L 86 28 L 94 28 Q 97 28 97 23 Q 97 18 94 18 Z" fill="currentColor"/>
+      <!-- T -->
+      <path d="M 113 8 L 145 8 L 145 18 L 134 18 L 134 52 L 124 52 L 124 18 L 113 18 Z" fill="currentColor"/>
+      <!-- O -->
+      <path d="M 165 7 Q 195 7 195 30 Q 195 53 165 53 Q 148 53 148 30 Q 148 7 165 7 Z M 165 18 Q 159 18 159 30 Q 159 42 165 42 Q 184 42 184 30 Q 184 18 165 18 Z" fill="currentColor"/>
+    </svg>
+    <div class="logo-tagline">Logistiikan uusi taso.</div>
+  </div>
+  <div class="nav-title">HukkaLaskuri</div>
+</div>
+
+<!-- ===== TABS ===== -->
+<div class="tabs">
+  <button class="tab active" data-tab="rakentaminen">Rakentaminen</button>
+  <button class="tab" data-tab="fmcg">FMCG / Logistiikka</button>
+  <button class="tab" data-tab="teollisuus">Teollisuus / Valmistus</button>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <!-- Company name bar -->
+  <div class="company-bar">
+    <label for="company-input">Asiakkaan nimi</label>
+    <input
+      type="text"
+      class="company-input"
+      id="company-input"
+      placeholder="Esim. Rauma Marine Constructions Oy"
+      maxlength="60"
+    />
+    <button class="report-btn" id="report-btn" style="width: auto; padding: 12px 20px;" disabled>
+      Avaa raportti tulostukseen
+    </button>
+  </div>
+
+  <div class="grid">
+    <!-- ===== INPUT PANEL ===== -->
+    <div class="panel" id="input-panel">
+      <h2>Syöttöparametrit</h2>
+      <div id="input-content"></div>
+      <button class="reset-btn" id="reset-btn">Palauta oletukset</button>
+    </div>
+
+    <!-- ===== RESULTS PANEL ===== -->
+    <div class="results-panel">
+      <div class="panel">
+        <h2>Hukkapotentiaali</h2>
+
+        <div class="kpi-grid" id="kpi-grid"></div>
+
+        <h3 style="margin-top: 28px;">Vertailutaso</h3>
+        <div id="comparison-bars"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Henkilöstöriski ja merkityksellisyys</h2>
+        <div class="meaningfulness-grid" id="meaningfulness-content"></div>
+
+        <h3>Arvoa tuottava aika</h3>
+        <div id="value-time-content"></div>
+      </div>
+
+      <div class="panel">
+        <div class="disclaimer">
+          Tämä laskuri antaa suuntaa ja suuruusluokkaa. Tulokset perustuvat
+          toimialatutkimukseen ja yleisiin vertailuarvoihin, eivät korvaa
+          organisaatiokohtaista analyysia.
+        </div>
+        <div class="sources">
+          Lähteet: Fieldwire/Hilti (rakentamisen 8 hukkaa) · McKinsey Supply
+          Chain · Avery Dennison · Cadre Tech / Dematic · eMoldino 2025 ·
+          Kela 2023 · Gallup / CIPD · Crosby (ITT Corporation) · Taylor &amp;
+          Francis 2025 · ASCE 2026
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REPORT TEMPLATE (hidden, used for PDF generation) ===== -->
+<div class="report-template" id="report-template"></div>
+
+<script>
+// =========================================================================
+// CONSTANTS — Tutkimusperusteiset kertoimet ja vertailuarvot
+// =========================================================================
+
+const WORKER_HOURS_PER_YEAR = 1760; // 220 päivää × 8 h
+const HOURLY_COST = 45; // €/h, kustannusperuste
+
+// Toimialakohtaiset oletusarvot, vaihteluvälit ja kertoimet
+const INDUSTRY_DATA = {
+  rakentaminen: {
+    label: 'Rakentaminen',
+    defaults: { revenue: 80, employees: 200, shifts: 2, type: 'rakennus' },
+    wasteRatio: { min: 0.28, max: 0.45 }, // Fieldwire/LCI
+    baseDeviations: { rakennus: 420, laivanrakennus: 280 }, // per M€
+    maturityDefault: { rakennus: 2.5, laivanrakennus: 3.0 },
+    maturityMultiplier: { 1: 1.8, 2: 1.5, 3: 1.2, 4: 0.9, 5: 0.7 },
+    shiftsMultiplier: { 1: 1.0, 2: 1.4, 3: 1.7 },
+    valueTime: { current: 43.6, worldClass: 65 }, // % ScienceDirect
+    sourceKey: 'Fieldwire/Hilti · LCI'
+  },
+  fmcg: {
+    label: 'FMCG / Logistiikka',
+    defaults: { revenue: 80, employees: 150, ostotilaukset: 5000, myyntitilaukset: 50000, automaatio: 30, shifts: 2 },
+    wasteRatio: { min: 0.20, max: 0.35 }, // McKinsey
+    errorRate: 0.08,
+    pickingErrorMin: 0.15, // automaatio 100% = 0.15× kertoimesta
+    pickingErrorMax: 1.0,
+    shiftsMultiplier: { 1: 1.0, 2: 1.4, 3: 1.7 },
+    valueTime: { current: 55, worldClass: 80 },
+    sourceKey: 'McKinsey · Cadre Tech / Dematic'
+  },
+  teollisuus: {
+    label: 'Teollisuus / Valmistus',
+    defaults: { revenue: 80, employees: 250, materialShare: 40, maturity: 3, shifts: 2 },
+    wasteRatio: { min: 0.25, max: 0.40 }, // OEE benchmarks
+    baseRate: 0.9, // poikkeamia/henkilö/v
+    materialBaseRate: 0.022, // 2,2% scrap+rework, eMoldino 2025
+    maturityMaterialMultiplier: { 1: 2.5, 2: 2.0, 3: 1.5, 4: 1.0, 5: 0.7 },
+    maturityMultiplier: { 1: 1.8, 2: 1.5, 3: 1.2, 4: 0.9, 5: 0.7 },
+    shiftsMultiplier: { 1: 1.0, 2: 1.35, 3: 1.65 },
+    valueTime: { current: 50, worldClass: 75 },
+    sourceKey: 'eMoldino · ASQ · OEE-benchmarks'
+  }
+};
+
+// =========================================================================
+// STATE
+// =========================================================================
+const state = {
+  activeTab: 'rakentaminen',
+  companyName: '',
+  rakentaminen: { ...INDUSTRY_DATA.rakentaminen.defaults },
+  fmcg: { ...INDUSTRY_DATA.fmcg.defaults },
+  teollisuus: { ...INDUSTRY_DATA.teollisuus.defaults }
+};
+
+// =========================================================================
+// CALCULATIONS — Deterministiset funktiot, ei AI-kutsua
+// =========================================================================
+
+function calcRakentaminen(s) {
+  const ind = INDUSTRY_DATA.rakentaminen;
+  const maturity = ind.maturityDefault[s.type] || 2.5;
+  const matMult = ind.maturityMultiplier[Math.round(maturity)] || 1.2;
+  const baseDev = ind.baseDeviations[s.type];
+  const shiftsMult = ind.shiftsMultiplier[s.shifts];
+
+  const deviationsPerYear = baseDev * matMult * s.revenue * shiftsMult / 4;
+
+  // Hukkaratio: laivanrakennuksessa ylemmäs vaihteluvälin sisällä
+  const wasteRatio = s.type === 'laivanrakennus'
+    ? ind.wasteRatio.max - 0.05
+    : (ind.wasteRatio.min + ind.wasteRatio.max) / 2;
+
+  const wastedHours = WORKER_HOURS_PER_YEAR * s.employees * s.shifts * wasteRatio;
+  const wastedEuros = wastedHours * HOURLY_COST;
+
+  // Piilotehdas: 15% liikevaihdosta (Crosby-mukaillen, modernit luvut)
+  const hiddenFactory = s.revenue * 1000000 * 0.15;
+
+  return {
+    deviationsPerYear: Math.round(deviationsPerYear),
+    wastedHours: Math.round(wastedHours),
+    wastedEuros: Math.round(wastedEuros),
+    hiddenFactory: Math.round(hiddenFactory),
+    wasteRatio,
+    valueTime: ind.valueTime,
+    materialWaste: null
+  };
+}
+
+function calcFmcg(s) {
+  const ind = INDUSTRY_DATA.fmcg;
+  const totalOrders = s.ostotilaukset + s.myyntitilaukset;
+  const pickMult = ind.pickingErrorMax - (s.automaatio / 100) * (ind.pickingErrorMax - ind.pickingErrorMin);
+  const complexityFactor = Math.log10(Math.max(totalOrders / 1000, 1)) * 0.3 + 1.0;
+  const shiftsMult = ind.shiftsMultiplier[s.shifts];
+
+  const deviationsPerYear = totalOrders * ind.errorRate * pickMult * complexityFactor / 10;
+
+  const wasteRatio = (ind.wasteRatio.min + ind.wasteRatio.max) / 2 - (s.automaatio / 100) * 0.05;
+  const wastedHours = WORKER_HOURS_PER_YEAR * s.employees * s.shifts * wasteRatio;
+  const wastedEuros = wastedHours * HOURLY_COST;
+
+  const hiddenFactory = s.revenue * 1000000 * 0.12;
+
+  return {
+    deviationsPerYear: Math.round(deviationsPerYear),
+    wastedHours: Math.round(wastedHours),
+    wastedEuros: Math.round(wastedEuros),
+    hiddenFactory: Math.round(hiddenFactory),
+    wasteRatio,
+    valueTime: ind.valueTime,
+    materialWaste: null,
+    automationLevel: s.automaatio
+  };
+}
+
+function calcTeollisuus(s) {
+  const ind = INDUSTRY_DATA.teollisuus;
+  const matMaterialMult = ind.maturityMaterialMultiplier[s.maturity];
+  const matMult = ind.maturityMultiplier[s.maturity];
+  const shiftsMult = ind.shiftsMultiplier[s.shifts];
+
+  const deviationsPerYear = ind.baseRate * (1 + (1 - s.maturity / 5) * 0.8) * s.employees * shiftsMult;
+
+  const wasteRatio = ind.wasteRatio.min + (5 - s.maturity) / 4 * (ind.wasteRatio.max - ind.wasteRatio.min);
+  const wastedHours = WORKER_HOURS_PER_YEAR * s.employees * s.shifts * wasteRatio;
+  const wastedEuros = wastedHours * HOURLY_COST;
+
+  const materialWaste = s.revenue * 1000000 * (s.materialShare / 100) * ind.materialBaseRate * matMaterialMult;
+
+  const hiddenFactory = s.revenue * 1000000 * 0.17;
+
+  return {
+    deviationsPerYear: Math.round(deviationsPerYear),
+    wastedHours: Math.round(wastedHours),
+    wastedEuros: Math.round(wastedEuros),
+    hiddenFactory: Math.round(hiddenFactory),
+    wasteRatio,
+    valueTime: ind.valueTime,
+    materialWaste: Math.round(materialWaste)
+  };
+}
+
+function calcAbsenceRisk(employees, meaningfulnessScore) {
+  // score 0-100, lower = higher absence risk
+  const baseline = 9.5; // Kela 2023
+  const additionalMultiplier = 1.30 + (1 - meaningfulnessScore / 100) * 0.30; // 1.30 - 1.60
+  const extraDays = baseline * additionalMultiplier - baseline;
+  const absenceCost = extraDays * employees * 350;
+  return { extraDays: extraDays.toFixed(1), absenceCost: Math.round(absenceCost) };
+}
+
+function calc(industry) {
+  const s = state[industry];
+  if (industry === 'rakentaminen') return calcRakentaminen(s);
+  if (industry === 'fmcg') return calcFmcg(s);
+  if (industry === 'teollisuus') return calcTeollisuus(s);
+}
+
+// =========================================================================
+// FORMATTING
+// =========================================================================
+
+function fmtNumber(n) {
+  return n.toLocaleString('fi-FI');
+}
+function fmtMoney(n) {
+  if (n >= 1000000) return (n / 1000000).toFixed(1).replace('.', ',') + ' M€';
+  if (n >= 1000) return Math.round(n / 1000) + ' k€';
+  return n + ' €';
+}
+function fmtMoneyRange(n) {
+  const low = n * 0.8;
+  const high = n * 1.2;
+  if (high >= 1000000) {
+    return (low/1000000).toFixed(1).replace('.', ',') + '–' + (high/1000000).toFixed(1).replace('.', ',') + ' M€';
+  }
+  return Math.round(low/1000) + '–' + Math.round(high/1000) + ' k€';
+}
+
+// =========================================================================
+// INPUT RENDERING
+// =========================================================================
+
+function renderInputs() {
+  const tab = state.activeTab;
+  const container = document.getElementById('input-content');
+  let html = '';
+
+  if (tab === 'rakentaminen') {
+    html = `
+      <h3>Yrityksen perustiedot</h3>
+      ${dualInput('revenue', 'Liikevaihto', state.rakentaminen.revenue, 0, 1000, ' M€', 'Huomioi laivanrakennus: yksittäiset projektit voivat olla satoja miljoonia.')}
+      ${dualInput('employees', 'Henkilöstömäärä', state.rakentaminen.employees, 10, 2000, '', 'Tehollinen kokoaikainen henkilöstö.')}
+      ${dualInput('shifts', 'Työvuoroja', state.rakentaminen.shifts, 1, 3, '', '1 = päivä, 2 = päivä + ilta, 3 = kolmivuoro.')}
+
+      <h3>Toimialan tyyppi</h3>
+      <div class="radio-group">
+        <button class="radio-btn ${state.rakentaminen.type === 'rakennus' ? 'active' : ''}" data-type="rakennus">Talonrakennus</button>
+        <button class="radio-btn ${state.rakentaminen.type === 'laivanrakennus' ? 'active' : ''}" data-type="laivanrakennus">Laivanrakennus</button>
+      </div>
+      <div class="hint" style="margin-top: 8px;">Laivanrakennus on ETO-tuotanto (Engineer-To-Order), jossa muutosvolyymi on tyypillisesti korkeampi.</div>
+    `;
+  } else if (tab === 'fmcg') {
+    html = `
+      <h3>Yrityksen perustiedot</h3>
+      ${dualInput('revenue', 'Liikevaihto', state.fmcg.revenue, 5, 500, ' M€', '')}
+      ${dualInput('employees', 'Henkilöstömäärä', state.fmcg.employees, 10, 1000, '', '')}
+      ${dualInput('shifts', 'Työvuoroja', state.fmcg.shifts, 1, 3, '', '')}
+
+      <h3>Operatiiviset luvut</h3>
+      ${dualInput('ostotilaukset', 'Ostotilaukset', state.fmcg.ostotilaukset, 100, 100000, ' /v', 'Saapuva tavaravirta.')}
+      ${dualInput('myyntitilaukset', 'Myyntitilaukset', state.fmcg.myyntitilaukset, 100, 500000, ' /v', 'Lähetykset asiakkaille.')}
+      ${dualInput('automaatio', 'Keräilyautomaation aste', state.fmcg.automaatio, 0, 100, ' %', '0 % = täysin manuaalinen, 100 % = täysautomaatio.')}
+    `;
+  } else if (tab === 'teollisuus') {
+    html = `
+      <h3>Yrityksen perustiedot</h3>
+      ${dualInput('revenue', 'Liikevaihto', state.teollisuus.revenue, 5, 500, ' M€', '')}
+      ${dualInput('employees', 'Henkilöstömäärä', state.teollisuus.employees, 10, 2000, '', '')}
+      ${dualInput('shifts', 'Työvuoroja', state.teollisuus.shifts, 1, 3, '', '')}
+
+      <h3>Tuotannon rakenne</h3>
+      ${dualInput('materialShare', 'Materiaaliosuus liikevaihdosta', state.teollisuus.materialShare, 20, 80, ' %', '')}
+      ${dualInput('maturity', 'Tuotannon kypsyystaso', state.teollisuus.maturity, 1, 5, '', '1 = ei Leania, 5 = world-class.')}
+    `;
+  }
+
+  container.innerHTML = html;
+  attachInputListeners();
+}
+
+function dualInput(key, label, value, min, max, unit, hint) {
+  return `
+    <div class="field" data-key="${key}">
+      <div class="field-header">
+        <span class="field-label">${label}</span>
+        <span class="field-value" data-edit="${key}">${fmtNumber(value)}${unit}</span>
+      </div>
+      <input type="range" class="slider" min="${min}" max="${max}" value="${value}" data-slider="${key}" />
+      ${hint ? `<div class="hint">${hint}</div>` : ''}
+    </div>
+  `;
+}
+
+function attachInputListeners() {
+  // Sliders
+  document.querySelectorAll('[data-slider]').forEach(slider => {
+    slider.addEventListener('input', e => {
+      const key = e.target.dataset.slider;
+      const val = parseInt(e.target.value);
+      state[state.activeTab][key] = val;
+      const valueEl = document.querySelector(`[data-edit="${key}"]`);
+      const unit = getUnit(key);
+      valueEl.textContent = fmtNumber(val) + unit;
+      updateResults();
+    });
+  });
+
+  // Inline edit
+  document.querySelectorAll('[data-edit]').forEach(el => {
+    el.addEventListener('click', () => {
+      const key = el.dataset.edit;
+      const currentVal = state[state.activeTab][key];
+      const slider = document.querySelector(`[data-slider="${key}"]`);
+      const min = slider.min, max = slider.max;
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.className = 'field-value-input';
+      input.value = currentVal;
+      input.min = min;
+      input.max = max;
+      el.replaceWith(input);
+      input.focus();
+      input.select();
+
+      const commit = () => {
+        let val = parseInt(input.value);
+        if (isNaN(val)) val = currentVal;
+        val = Math.max(min, Math.min(max, val));
+        state[state.activeTab][key] = val;
+        slider.value = val;
+        const newSpan = document.createElement('span');
+        newSpan.className = 'field-value';
+        newSpan.dataset.edit = key;
+        newSpan.textContent = fmtNumber(val) + getUnit(key);
+        input.replaceWith(newSpan);
+        attachInputListeners();
+        updateResults();
+      };
+      input.addEventListener('blur', commit);
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') commit();
+      });
+    });
+  });
+
+  // Radio buttons
+  document.querySelectorAll('[data-type]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.rakentaminen.type = btn.dataset.type;
+      renderInputs();
+      updateResults();
+    });
+  });
+}
+
+function getUnit(key) {
+  const unitMap = {
+    revenue: ' M€',
+    employees: '',
+    shifts: '',
+    ostotilaukset: ' /v',
+    myyntitilaukset: ' /v',
+    automaatio: ' %',
+    materialShare: ' %',
+    maturity: ''
+  };
+  return unitMap[key] || '';
+}
+
+// =========================================================================
+// RESULTS RENDERING
+// =========================================================================
+
+function updateResults() {
+  const r = calc(state.activeTab);
+
+  // KPI cards
+  const kpiGrid = document.getElementById('kpi-grid');
+  const meaningfulnessScore = calculateMeaningfulnessScore();
+  const customerRisk = calculateCustomerRisk(r);
+
+  let kpiCards = `
+    <div class="kpi-card poikkeamat">
+      <div class="kpi-label">Poikkeamat</div>
+      <div class="kpi-value">${fmtNumber(r.deviationsPerYear)}</div>
+      <div class="kpi-unit">kpl / vuosi</div>
+      <div class="kpi-note">Toimialakeskiarvo, 41 % toistuu ilman korjausta.</div>
+    </div>
+    <div class="kpi-card aika">
+      <div class="kpi-label">Hukattu aika</div>
+      <div class="kpi-value">${fmtMoney(r.wastedEuros)}</div>
+      <div class="kpi-unit">${fmtNumber(r.wastedHours)} h / v</div>
+      <div class="kpi-note">Tutkimusperusteinen, 45 €/h kustannustaso.</div>
+    </div>
+    <div class="kpi-card asiakas">
+      <div class="kpi-label">Asiakasriski</div>
+      <div class="kpi-value">${customerRisk.score}</div>
+      <div class="kpi-unit">${customerRisk.label}</div>
+      <div class="kpi-note">Pisteet 0-100, korkeampi on parempi.</div>
+    </div>
+    <div class="kpi-card henkilosto">
+      <div class="kpi-label">${r.materialWaste ? 'Materiaalihukka' : 'Hukkapotentiaali'}</div>
+      <div class="kpi-value">${r.materialWaste ? fmtMoney(r.materialWaste) : fmtMoney(r.hiddenFactory)}</div>
+      <div class="kpi-unit">${r.materialWaste ? 'scrap + rework' : 'piilotehdas, arvio'}</div>
+      <div class="kpi-note">${r.materialWaste ? '2,2 % liikevaihdosta (eMoldino 2025).' : 'Crosby: tyypillinen taso 12-17 %.'}</div>
+    </div>
+  `;
+  kpiGrid.innerHTML = kpiCards;
+
+  // Comparison bars
+  const compBars = document.getElementById('comparison-bars');
+  const currentWasteRatio = r.wasteRatio * 100;
+  const tier = currentWasteRatio < 25 ? 'parempi' : (currentWasteRatio < 33 ? 'keski' : 'heikompi');
+  const ind = INDUSTRY_DATA[state.activeTab];
+
+  compBars.innerHTML = `
+    <div class="bar-row">
+      <div class="bar-label">Nykyinen hukka, arvio</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width: ${currentWasteRatio * 2}%;">${currentWasteRatio.toFixed(1)} %</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Toimialan tyypillinen</div>
+      <div class="bar-wrap"><div class="bar-fill bench" style="width: ${((ind.wasteRatio.min + ind.wasteRatio.max) / 2 * 100) * 2}%;">${((ind.wasteRatio.min + ind.wasteRatio.max) / 2 * 100).toFixed(1)} %</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">World-class taso</div>
+      <div class="bar-wrap"><div class="bar-fill world" style="width: ${(ind.wasteRatio.min * 0.6) * 100 * 2}%;">${(ind.wasteRatio.min * 0.6 * 100).toFixed(1)} %</div></div>
+    </div>
+  `;
+
+  // Meaningfulness panel
+  const absence = calcAbsenceRisk(state[state.activeTab].employees, meaningfulnessScore);
+  const mfGrid = document.getElementById('meaningfulness-content');
+  const labelClass = meaningfulnessScore >= 70 ? 'low' : (meaningfulnessScore >= 40 ? 'mid' : 'high');
+  const labelText = meaningfulnessScore >= 70 ? 'Matala riski' : (meaningfulnessScore >= 40 ? 'Kohtalainen riski' : 'Korkea riski');
+
+  mfGrid.innerHTML = `
+    <div class="gauge-container">
+      <div class="gauge-value">${meaningfulnessScore}</div>
+      <div class="gauge-label ${labelClass}">${labelText}</div>
+      <div class="hint" style="margin-top: 8px;">Pidätysriski-arvio (0–100)</div>
+    </div>
+    <div class="gauge-container">
+      <div class="gauge-value">+${absence.extraDays}</div>
+      <div class="gauge-label">Lisäpäivää / hlö / v</div>
+      <div class="hint" style="margin-top: 8px;">Kela-baseline 9,5 pv. Gallup/CIPD: matala merkityksellisyys lisää poissaoloja 30–60 %.</div>
+    </div>
+    <div class="gauge-container">
+      <div class="gauge-value">${fmtMoney(absence.absenceCost)}</div>
+      <div class="gauge-label">Lisäkustannus / v</div>
+      <div class="hint" style="margin-top: 8px;">Per työntekijä 350 €/pv (sis. korvaava työ).</div>
+    </div>
+  `;
+
+  // Value-time content
+  const vtContent = document.getElementById('value-time-content');
+  const gap = r.valueTime.worldClass - r.valueTime.current;
+  vtContent.innerHTML = `
+    <div class="bar-row">
+      <div class="bar-label">Nykyinen, ${ind.label}</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width: ${r.valueTime.current}%;">${String(r.valueTime.current).replace('.', ',')} %</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">World-class tavoite</div>
+      <div class="bar-wrap"><div class="bar-fill world" style="width: ${r.valueTime.worldClass}%;">${r.valueTime.worldClass} %</div></div>
+    </div>
+    <div class="hint" style="margin-top: 10px;">
+      <strong>Gap: ${String(gap).replace('.', ',')} prosenttipistettä.</strong> ${getValueTimeContext(state.activeTab, r.valueTime.current, r.valueTime.worldClass)}
+    </div>
+  `;
+}
+
+function calculateMeaningfulnessScore() {
+  // Simple proxy: higher maturity / automation / fewer shifts = better engagement potential
+  const s = state[state.activeTab];
+  let score = 60;
+  if (state.activeTab === 'teollisuus') score += (s.maturity - 3) * 8;
+  if (state.activeTab === 'fmcg') score += (s.automaatio - 30) * 0.2;
+  if (state.activeTab === 'rakentaminen' && s.type === 'rakennus') score -= 5;
+  score -= (s.shifts - 1) * 4;
+  return Math.max(20, Math.min(95, Math.round(score)));
+}
+
+function calculateCustomerRisk(r) {
+  // Inverse of waste ratio: more waste = higher customer risk
+  const wasteScore = r.wasteRatio * 100;
+  const score = Math.max(10, Math.min(100, Math.round(100 - wasteScore * 1.5)));
+  const label = score >= 70 ? 'Hyvä' : (score >= 50 ? 'Kohtalainen' : 'Heikko');
+  return { score, label };
+}
+
+function getValueTimeContext(tab, current, target) {
+  const map = {
+    rakentaminen: `Rakentamisessa arvoa tuottava aika on tyypillisesti ${current} % (ScienceDirect). World-class-taso on ${target} %. Suurin hukka: odottelu, materiaalin etsintä, uudelleentyö.`,
+    fmcg: `Päivittäistavaralogistiikassa arvoa tuottava aika tyypillisesti ${current} %. Parhaat keräilyautomaatiolla yltävät ${target} %:iin. Automaatioaste leikkaa virheitä jopa 85 %.`,
+    teollisuus: `Valmistuksen arvoa tuottava aika tyypillisesti ${current} % (OEE-benchmarkit). World-class taso ${target} %. Lean-kypsyyden nosto tasolta 3 tasolle 4 leikkaa hukkaa noin 25 %.`
+  };
+  return map[tab];
+}
+
+// =========================================================================
+// NARRATIVE — Toimialakohtaiset sanallistukset, deterministiset
+// Sama syöttö → sama teksti. Käytetään template-pohjia, ei AI-tekstigenerointia.
+// =========================================================================
+
+function getNarrative(tab, companyName, state, r) {
+  const co = companyName;
+  const s = state;
+  const repeating = Math.round(r.deviationsPerYear * 0.41); // 41% toistuu
+  const wasteRatioPct = (r.wasteRatio * 100).toFixed(0).replace('.', ',');
+  const valueTimeGap = r.valueTime.worldClass - r.valueTime.current;
+
+  if (tab === 'rakentaminen') {
+    const typeLabel = s.type === 'laivanrakennus' ? 'Laivanrakennuksen' : 'Rakentamisen';
+    const typeContext = s.type === 'laivanrakennus'
+      ? 'Laivanrakennuksen ETO-tuotanto tarkoittaa, että jokainen alus on käytännössä uniikki, ja noin 10 % asennustunneista syntyy suunnittelumuutoksista (Industry-Science 2025). Sister ship -ongelma — sama virhe toistuu sarjan seuraavissa aluksissa, koska muutos ei propagoidu PLM-järjestelmässä — on tunnistettu telakkateollisuuden vaikeimmaksi yksittäiseksi ongelmaksi (SSI 2017).'
+      : 'Rakentamisen suurin yksittäinen hukan lähde on materiaalin etsintä, odottelu ja uudelleentyö — tyypillisesti 50-70 % poikkeamista syntyy suunnitteluvaiheessa, mutta havaitaan tuotannossa (Love et al. 2008). Mitä myöhemmin virhe havaitaan, sitä kalliimpaa sen korjaaminen on, klassinen 1/10/100 -sääntö.';
+    const valueTimeContext = s.type === 'laivanrakennus'
+      ? `Tuotantotilojen ahtaus, yövuorot ja alihankkijaverkosto laskevat arvoa tuottavan ajan osuutta entisestään — laivan sisätiloissa hitsaaminen ahtaissa kulmissa lisää sekä virheitä että tapaturmariskiä (Hypertherm 2024 raportoi 6,8x enemmän virheitä korkean ergonomiakuorman tehtävissä).`
+      : `Suunnittelun kypsyys ennen tuotantoon menoa on suurin yksittäinen muuttuja — Cardiff/ORCA 2025 osoitti simulaatiolla, että rework-suhteen lasku 0,5:stä 0,3:een lyhentää toimitusaikaa yli puolella.`;
+
+    return {
+      headline: `${typeLabel} tutkimusnäyttö (Fieldwire/LCI) osoittaa, että ${wasteRatioPct} % työajasta menee hukkaan odotteluun, materiaalin etsintään ja uudelleentyöhön. ${co}:n kokoluokassa (${fmtNumber(s.employees)} henkilöä, ${s.shifts} vuoroa) tämä on ${fmtNumber(r.wastedHours)} hukkatuntia, eli ${fmtMoney(r.wastedEuros)} vuodessa, kun kustannustasona käytetään 45 €/h. Tämä on tutkimusperusteinen keskiarvo — todellinen taso voi vaihdella organisaation kypsyyden ja prosessien mukaan ±20 %.`,
+      deviations: `${co}:n vuotuinen poikkeamamäärä on tutkimuspohjaisesti arvioituna ${fmtNumber(r.deviationsPerYear)} kpl. Kriittinen havainto: 41 % poikkeamista toistuu ilman juurisyykorjausta (Taylor & Francis 2025) — eli noin ${fmtNumber(repeating)} tapausta vuodessa ovat saman ongelman uusiutumista, ei uusia. Toistuvuus on suurin yksittäinen hukan kasvattaja, ja juurisyyanalyysin puute on tyypillisin syy: virhe korjataan kerran, mutta sen aiheuttaja jää jäljelle.`,
+      valueTime: `Kolmas keskeinen luku on arvoa tuottavan ajan gap, ${valueTimeGap} prosenttiyksikköä. ${typeLabel === 'Laivanrakennuksen' ? 'Laivanrakennuksessa' : 'Rakentamisessa'} arvoa tuottava aika on tyypillisesti ${String(r.valueTime.current).replace('.', ',')} % (ScienceDirect), kun world-class taso on ${r.valueTime.worldClass} %. ${valueTimeContext}`,
+      context: `${typeContext} Aliraportointi on järjestelmällistä: ASCE 2026 -tutkimus osoittaa, että todelliset poikkeamakustannukset ovat keskimäärin neljä kertaa raportoidun tason — ${co}:n nykyinen mittaus näyttää siis todennäköisesti vain noin neljäsosan kokonaisuudesta. Crosbyn klassinen ITT Corporation -case osoitti, että systemaattisella ohjelmalla poikkeamakustannukset voidaan pienentää 25 %:sta alle 6 %:iin liikevaihdosta — ilman massiivisia investointeja.`
+    };
+  }
+
+  if (tab === 'fmcg') {
+    return {
+      headline: `Päivittäistavaralogistiikan tutkimusnäyttö (McKinsey, Cadre Tech) osoittaa, että ${wasteRatioPct} % työajasta menee hukkaan odotteluun, virheelliseen keräilyyn ja uudelleenkäsittelyyn. ${co}:n kokoluokassa (${fmtNumber(s.employees)} henkilöä, ${s.shifts} vuoroa) tämä on ${fmtNumber(r.wastedHours)} hukkatuntia, eli ${fmtMoney(r.wastedEuros)} vuodessa, kun kustannustasona käytetään 45 €/h. Saapuvan tavaravirran (${fmtNumber(s.ostotilaukset)} ostotilausta/v) ja lähtevän (${fmtNumber(s.myyntitilaukset)} myyntitilausta/v) yhteismäärä luo perustan myös poikkeamavolyymille.`,
+      deviations: `${co}:n vuotuinen poikkeamamäärä on tutkimuspohjaisesti arvioituna ${fmtNumber(r.deviationsPerYear)} kpl. Tämä perustuu McKinseyn 8 %:n virhetasoon ostotilauksissa, säädettynä keräilykompleksisuuden mukaan. Keräilyautomaation aste (${s.automaatio} %) on suurin yksittäinen kerroin — täysin manuaalinen prosessi tuottaa noin kuusinkertaisen virhetason verrattuna täysautomaatioon (Cadre Tech / Dematic dokumentoi 85 %:n virhevähennyksen). Yksittäinen keräilyvirhe maksaa keskimäärin 100 €, mutta volyymillänne kuukausikustannus voi olla kymmeniä tuhansia euroja.`,
+      valueTime: `Kolmas keskeinen luku on arvoa tuottavan ajan gap, ${valueTimeGap} prosenttiyksikköä. Päivittäistavaralogistiikassa arvoa tuottava aika on tyypillisesti ${String(r.valueTime.current).replace('.', ',')} %, kun maailman parhaat keräilyautomaatiolla varustetut varastot yltävät ${r.valueTime.worldClass} %:iin. Erotus syntyy odottelusta, kävelystä keräilypisteiden välillä, virheellisistä lähetyksistä ja niiden uudelleenkäsittelystä — kaikki näistä ovat mitattavissa ja vähennettävissä.`,
+      context: `Virheiden todellinen kustannus on harvoin näkyvissä: tutkimusten mukaan 55 % 3PL-asiakkaista valittaa tietojärjestelmien tuottamasta huonosta laadusta (Chalmers 2012), mutta vain pieni osa näistä virheistä päätyy raportteihin. ${co}:n nykyinen mittaus näyttää todennäköisesti vain murto-osan koko piilotehtaan kustannuksesta. Crosbyn klassinen ITT Corporation -case osoitti, että systemaattisella ohjelmalla poikkeamakustannukset voidaan pienentää 25 %:sta alle 6 %:iin liikevaihdosta.`
+    };
+  }
+
+  if (tab === 'teollisuus') {
+    const maturityLabel = s.maturity <= 2 ? 'matala' : (s.maturity === 3 ? 'keskimääräinen' : 'kypsä');
+    const materialPctOfRevenue = ((r.materialWaste / (s.revenue * 1000000)) * 100).toFixed(1).replace('.', ',');
+
+    return {
+      headline: `Valmistavan teollisuuden tutkimusnäyttö (ASQ, OEE-benchmarkit) osoittaa, että ${wasteRatioPct} % työajasta menee hukkaan asetuksiin, odotteluun, korjauksiin ja seisokkeihin. ${co}:n kokoluokassa (${fmtNumber(s.employees)} henkilöä, ${s.shifts} vuoroa) tämä on ${fmtNumber(r.wastedHours)} hukkatuntia, eli ${fmtMoney(r.wastedEuros)} vuodessa, kun kustannustasona käytetään 45 €/h. Lean-kypsyytenne (taso ${s.maturity}/5, ${maturityLabel}) on suurin yksittäinen hukan kerroin tässä laskelmassa.`,
+      deviations: `${co}:n vuotuinen poikkeamamäärä on tutkimuspohjaisesti arvioituna ${fmtNumber(r.deviationsPerYear)} kpl. Siirtyminen Lean-tasolta ${s.maturity} tasolle ${Math.min(s.maturity + 1, 5)} leikkaisi poikkeamia noin 25 % — ei investoinneilla, vaan systemaattisella menetelmäkehityksellä. Kriittinen havainto: 41 % poikkeamista toistuu ilman juurisyykorjausta (Taylor & Francis 2025), eli noin ${fmtNumber(repeating)} tapausta vuodessa ovat saman ongelman uusiutumista. Hypertherm 2024 -tutkimus osoittaa lisäksi, että reworkia tekevät työntekijät loukkaantuvat kaksi kertaa todennäköisemmin kuin normaalisti työskentelevät.`,
+      valueTime: `Kolmas keskeinen luku on arvoa tuottavan ajan gap, ${valueTimeGap} prosenttiyksikköä. Valmistavan teollisuuden arvoa tuottava aika on tyypillisesti ${String(r.valueTime.current).replace('.', ',')} % (OEE-benchmarkit), kun world-class taso on ${r.valueTime.worldClass} %. Suurimmat selittäjät: pitkät asetusajat, suunnittelemattomat seisokit, raaka-aineen odottelu, korjaustyöt ja informaatiokatkoksista syntyvä uudelleentyö.`,
+      context: `Materiaalihukka on ${fmtMoney(r.materialWaste)} eli ${materialPctOfRevenue} % liikevaihdosta (eMoldino 2025 viittaa 2,2 % keskiarvoon, joka säätyy Lean-kypsyydellä). COPQ-tutkimukset (ASQ/Jama Software 2026) viittaavat siihen, että valmistavalla teollisuudella todellinen huonon laadun kokonaiskustannus on 15-20 % liikevaihdosta — eli mitä laskuri näyttää, voi olla vain puolet todellisuudesta. Crosbyn klassinen ITT Corporation -case osoitti, että systemaattisella ohjelmalla poikkeamakustannukset voidaan pienentää 25 %:sta alle 6 %:iin liikevaihdosta.`
+    };
+  }
+
+  // Fallback
+  return { headline: '', deviations: '', valueTime: '', context: '' };
+}
+
+// =========================================================================
+// TABS
+// =========================================================================
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    state.activeTab = tab.dataset.tab;
+    renderInputs();
+    updateResults();
+  });
+});
+
+// =========================================================================
+// COMPANY NAME + REPORT BUTTON
+// =========================================================================
+
+const companyInput = document.getElementById('company-input');
+const reportBtn = document.getElementById('report-btn');
+
+companyInput.addEventListener('input', e => {
+  state.companyName = e.target.value.trim();
+  reportBtn.disabled = !state.companyName;
+});
+
+reportBtn.addEventListener('click', () => {
+  if (!state.companyName) return;
+  generateReport();
+});
+
+// =========================================================================
+// RESET
+// =========================================================================
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  state[state.activeTab] = { ...INDUSTRY_DATA[state.activeTab].defaults };
+  renderInputs();
+  updateResults();
+});
+
+// =========================================================================
+// REPORT GENERATION — Deterministinen template, ei AI:ta
+// =========================================================================
+
+function generateReport() {
+  const tab = state.activeTab;
+  const r = calc(tab);
+  const s = state[tab];
+  const ind = INDUSTRY_DATA[tab];
+  const co = state.companyName;
+  const today = new Date().toLocaleDateString('fi-FI');
+  const meaningfulnessScore = calculateMeaningfulnessScore();
+  const absence = calcAbsenceRisk(s.employees, meaningfulnessScore);
+
+  // Total hidden hukka, M€
+  const totalHukka = (r.wastedEuros + (r.materialWaste || 0) + absence.absenceCost) / 1000000;
+  const hukkaRange = `${(totalHukka * 0.8).toFixed(1).replace('.', ',')}–${(totalHukka * 1.2).toFixed(1).replace('.', ',')} M€`;
+
+  // Tier classification
+  const wasteRatio = r.wasteRatio * 100;
+  const benchAvg = (ind.wasteRatio.min + ind.wasteRatio.max) / 2 * 100;
+  let tier, tierWord;
+  if (wasteRatio < benchAvg * 0.9) { tier = 'parempi'; tierWord = 'paremmassa kolmanneksessa'; }
+  else if (wasteRatio < benchAvg * 1.1) { tier = 'keski'; tierWord = 'keskimääräisellä tasolla'; }
+  else { tier = 'heikompi'; tierWord = 'heikommassa kolmanneksessa'; }
+
+  // Crosby saving estimate (15% → 6% liikevaihdosta)
+  const crosbySaving = s.revenue * 0.09; // 9 prosenttiyksikön ero
+  const achievable = (r.hiddenFactory + (r.materialWaste || 0)) * 0.4 / 1000000; // 40% leikkaus 3v
+
+  // Sanallistus — deterministinen, perustuu lukuihin ja toimialaan
+  const narrative = getNarrative(tab, co, s, r);
+
+  // Ziirto-logo SVG:nä raportin yläosaan. Sininen versio (color: #002337)
+  // valkoiselle taustalle. Upotettu suoraan, ei verkkopyyntöjä.
+  const logoSvg = `<svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" style="height: 32px; width: auto; color: #002337; display: block;">
+    <path d="M 5 8 L 35 8 L 35 18 L 18 42 L 35 42 L 35 52 L 5 52 L 5 42 L 22 18 L 5 18 Z" fill="currentColor"/>
+    <path d="M 42 8 L 52 8 L 52 48 L 47 52 L 42 48 Z" fill="currentColor"/>
+    <path d="M 58 8 L 68 8 L 68 48 L 63 52 L 58 48 Z" fill="currentColor"/>
+    <path d="M 75 8 L 95 8 Q 108 8 108 22 Q 108 32 100 36 L 110 52 L 98 52 L 90 38 L 86 38 L 86 52 L 75 52 Z M 86 18 L 86 28 L 94 28 Q 97 28 97 23 Q 97 18 94 18 Z" fill="currentColor"/>
+    <path d="M 113 8 L 145 8 L 145 18 L 134 18 L 134 52 L 124 52 L 124 18 L 113 18 Z" fill="currentColor"/>
+    <path d="M 165 7 Q 195 7 195 30 Q 195 53 165 53 Q 148 53 148 30 Q 148 7 165 7 Z M 165 18 Q 159 18 159 30 Q 159 42 165 42 Q 184 42 184 30 Q 184 18 165 18 Z" fill="currentColor"/>
+  </svg>`;
+
+  const logoHtml = `<div style="text-align: right;">${logoSvg}<div style="font-size: 9px; font-weight: 500; color: #6B7785; margin-top: 4px;">Logistiikan uusi taso.</div></div>`;
+
+  const template = document.getElementById('report-template');
+  template.innerHTML = `
+    <!-- SIVU 1 -->
+    <div class="report-page">
+      <div class="rep-header">
+        <div class="rep-title-block">
+          <h1>Piilohukka-arvio</h1>
+          <div class="subtitle">${co} · ${ind.label} · ${today}</div>
+        </div>
+        ${logoHtml}
+      </div>
+
+      <div class="rep-headline">
+        <div class="label">Vuotuisen piilohukan suuruusluokka</div>
+        <div class="number">${hukkaRange}</div>
+        <div class="footnote">Tutkimusperusteinen suuruusluokka-arvio. Ei tarkka mittaus.</div>
+      </div>
+
+      <div class="rep-three-numbers">
+        <div class="rep-num-card">
+          <div class="title">Hukattu työaika</div>
+          <div class="value">${fmtMoney(r.wastedEuros)}</div>
+          <div class="desc">${fmtNumber(r.wastedHours)} tuntia vuodessa, kustannustaso 45 €/h.</div>
+        </div>
+        <div class="rep-num-card">
+          <div class="title">Poikkeamia vuodessa</div>
+          <div class="value">${fmtNumber(r.deviationsPerYear)}</div>
+          <div class="desc">Tutkimuspohjainen toimialakeskiarvo, säädetty kokoluokkaanne.</div>
+        </div>
+        <div class="rep-num-card">
+          <div class="title">${r.materialWaste ? 'Materiaalihukka' : 'Arvoa tuottavan ajan gap'}</div>
+          <div class="value">${r.materialWaste ? fmtMoney(r.materialWaste) : String(r.valueTime.worldClass - r.valueTime.current).replace('.', ',') + ' %-yks'}</div>
+          <div class="desc">${r.materialWaste ? `Scrap + rework, ${(r.materialWaste/(s.revenue*1000000)*100).toFixed(1).replace('.',',')} % liikevaihdosta.` : `Nykyinen ${String(r.valueTime.current).replace('.', ',')} %, world-class ${r.valueTime.worldClass} %.`}</div>
+        </div>
+      </div>
+
+      <div class="rep-narrative">
+        <div class="rep-section-title">Mitä tämä tarkoittaa</div>
+        <p class="rep-narrative-p">${narrative.headline}</p>
+        <p class="rep-narrative-p">${narrative.deviations}</p>
+        <p class="rep-narrative-p">${narrative.valueTime}</p>
+        <p class="rep-narrative-p">${narrative.context}</p>
+      </div>
+
+      <div class="rep-footer">
+        Lähteet: Crosby, Quality Digest 1999 · Taylor &amp; Francis 2025 · ASCE 2026 · McKinsey 2017 · ${ind.sourceKey} · Gallup 2020 · Kela 2023
+      </div>
+    </div>
+
+    <!-- SIVU 2 -->
+    <div class="report-page">
+      <div class="rep-header">
+        <div class="rep-title-block">
+          <h1 style="font-size: 22px;">Konteksti ja vertailut</h1>
+          <div class="subtitle">${co} · Sivu 2/2</div>
+        </div>
+        ${logoHtml}
+      </div>
+
+      <div class="rep-section-title">Vertailutaso toimialalla</div>
+      <div class="rep-compare-bars">
+        <div class="rep-compare-bar">
+          <div class="rep-compare-label">${co}, arvio</div>
+          <div class="rep-compare-track">
+            <div class="rep-compare-fill actual" style="width: ${Math.min(wasteRatio * 2.2, 100)}%;">${wasteRatio.toFixed(1).replace('.', ',')} %</div>
+          </div>
+        </div>
+        <div class="rep-compare-bar">
+          <div class="rep-compare-label">Toimialan tyypillinen</div>
+          <div class="rep-compare-track">
+            <div class="rep-compare-fill typical" style="width: ${Math.min(benchAvg * 2.2, 100)}%;">${benchAvg.toFixed(1).replace('.', ',')} %</div>
+          </div>
+        </div>
+        <div class="rep-compare-bar">
+          <div class="rep-compare-label">World-class</div>
+          <div class="rep-compare-track">
+            <div class="rep-compare-fill world" style="width: ${Math.min(ind.wasteRatio.min * 0.6 * 100 * 2.2, 100)}%;">${(ind.wasteRatio.min * 0.6 * 100).toFixed(1).replace('.', ',')} %</div>
+          </div>
+        </div>
+      </div>
+      <div class="rep-compare-summary">
+        ${co} sijoittuu toimialan ${tierWord} tutkimusvertailuissa.
+      </div>
+
+      <div class="rep-section-title">Tärkeää huomata</div>
+      <div class="rep-context-grid">
+        <div class="rep-context-card">
+          <div class="title">Mitattu vs. todellinen</div>
+          <div class="text">Crosby (ITT Corporation): helposti mitattava poikkeamakustannus on tyypillisesti vain 3–4 % liikevaihdosta, mutta todellinen 25 % asti. Erotus on kapasiteettia, joka kuluu uudelleen tekemiseen huomaamatta.</div>
+        </div>
+        <div class="rep-context-card">
+          <div class="title">Toistuvat poikkeamat</div>
+          <div class="text">41 % poikkeamista toistuu ilman juurisyykorjausta (Taylor &amp; Francis 2025). Yksittäisten tapausten korjaaminen ei pienennä piilotehdasta, toistuvuuden katkaiseminen pienentää.</div>
+        </div>
+        <div class="rep-context-card">
+          <div class="title">Aliraportointi</div>
+          <div class="text">ASCE 2026: todelliset poikkeamakustannukset ovat keskimäärin 4 kertaa raportoidun tason. ${co}:n nykyinen poikkeamamittaus näyttää todennäköisesti vain noin neljäsosan kokonaisuudesta.</div>
+        </div>
+      </div>
+
+      <div class="rep-section-title">Saavutettavissa oleva</div>
+      <div class="rep-reference-block">
+        <div class="title">Crosby-vertailu — ITT Corporation</div>
+        <div class="text">Crosby pienensi ITT Corporationissa poikkeamakustannukset 25 %:sta alle 6 %:iin liikevaihdosta — systemaattisella ohjelmalla, ei investoinneilla. ${co}:n kokoluokassa tämä vastaisi merkittävää vuosittaista säästöä.</div>
+        <div class="rep-savings-table">
+          <div class="label">${co} nykyinen piilotehdas:</div>
+          <div class="value">${fmtMoney(r.hiddenFactory)}</div>
+          <div class="label">Saavutettavissa 3 vuoden ohjelmalla (40 %):</div>
+          <div class="value highlight">${fmtMoney(r.hiddenFactory * 0.4)}</div>
+          <div class="label">Toteutuva säästö per vuosi:</div>
+          <div class="value highlight">${fmtMoney(r.hiddenFactory * 0.4 / 3)}</div>
+        </div>
+      </div>
+
+      <div class="rep-cta">
+        <div class="title">Mistä jatkaa</div>
+        <div class="text">Tämä arvio on tutkimusperusteinen suuruusluokka. Organisaatiokohtainen mittaus tuottaa tarkemman luvun ja konkreettiset toimenpiteet. Ziirto Oy on Suomen vahvin sisälogistiikan ja operatiivisen kehittämisen kumppani — WorkStudy360-menetelmä paljastaa piilotehdasta numeroina ja euroina, ei mielipiteinä.</div>
+        <div class="contact">
+          Toni Salminen · toni@ziirto.fi · Ziirto Oy<br>
+          ziirto.fi
+        </div>
+      </div>
+
+      <div class="rep-footer">
+        Crosby, Quality Digest 1999 · Taylor &amp; Francis 2025 (1097 NCR, 41 % toistuvuus) · ASCE 2026 (rework aliraportoitu 4×) · McKinsey 2017 · ${ind.sourceKey} · Gallup 2020 · Kela 2023 (sairauspoissaolokeskiarvo 9,5 pv) · eMoldino 2025 (scrap+rework 2,2 %)
+      </div>
+    </div>
+  `;
+
+  const safeName = co.replace(/[^a-zA-ZäöåÄÖÅ0-9]/g, '_');
+  // Asetetaan dokumentin otsikko hetkellisesti — tämä määrää PDF:n
+  // oletustallennusnimen kun käyttäjä valitsee "Tallenna PDF:nä".
+  const originalTitle = document.title;
+  document.title = `Piilohukka-arvio_${safeName}_${ind.label.replace(/ \/ /g, '_').replace(/ /g, '_')}_${today.replace(/\./g, '-')}`;
+
+  console.log('[Print] Avataan tulostusdialogi asiakkaalle:', co);
+
+  // Annetaan DOMille ja fonteille hetki ennen tulostusta
+  const fontReady = document.fonts && document.fonts.ready
+    ? document.fonts.ready
+    : Promise.resolve();
+
+  fontReady.then(() => {
+    setTimeout(() => {
+      window.print();
+      // Palautetaan dokumentin alkuperäinen otsikko tulostusdialogin
+      // sulkemisen jälkeen, jotta sivuotsikko ei jää väärään tilaan.
+      setTimeout(() => {
+        document.title = originalTitle;
+      }, 1000);
+    }, 100);
+  });
+}
+
+// =========================================================================
+// INIT
+// =========================================================================
+
+renderInputs();
+updateResults();
+</script>
+</body>
+</html>
