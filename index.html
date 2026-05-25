@@ -1316,31 +1316,26 @@ function getNarrative(tab, companyName, state, r) {
   const s = state;
   const repeating = Math.round(r.deviationsPerYear * 0.41); // 41% toistuu
   const wasteRatioPct = (r.wasteRatio * 100).toFixed(0).replace('.', ',');
-  const valueTimeGap = String(r.valueTime.worldClass - r.valueTime.current).replace('.', ',');
+
+  // Yhteinen piilotehdas-kappale kaikille toimialoille — Jussin palautteen mukaan
+  // tämä termi resonoi vahvasti. Lyhyt, mutta sisältää keskeisimmät havainnot.
+  const piilotehdas = `Crosby kutsui tätä piilotehtaaksi: helposti mitattava poikkeamakustannus on tyypillisesti 3–4 % liikevaihdosta, mutta todellinen jopa 25 %. ASCE 2026: rework on aliraportoitu nelinkertaisesti — ${co}:n nykyinen mittaus näyttää siis vain noin neljäsosan kokonaisuudesta.`;
 
   if (tab === 'rakentaminen') {
     const typeLabel = s.type === 'laivanrakennus' ? 'Laivanrakennuksen' : 'Rakentamisen';
-    const typeContext = s.type === 'laivanrakennus'
-      ? 'Laivanrakennuksen ETO-tuotanto tarkoittaa, että jokainen alus on käytännössä uniikki, ja noin 10 % asennustunneista syntyy suunnittelumuutoksista (Industry-Science 2025). Sister ship -ongelma — sama virhe toistuu sarjan seuraavissa aluksissa, koska muutos ei propagoidu PLM-järjestelmässä — on tunnistettu telakkateollisuuden vaikeimmaksi yksittäiseksi ongelmaksi (SSI 2017).'
-      : 'Rakentamisen suurin yksittäinen hukan lähde on materiaalin etsintä, odottelu ja uudelleentyö — tyypillisesti 50-70 % poikkeamista syntyy suunnitteluvaiheessa, mutta havaitaan tuotannossa (Love et al. 2008). Mitä myöhemmin virhe havaitaan, sitä kalliimpaa sen korjaaminen on, klassinen 1/10/100 -sääntö.';
-    const valueTimeContext = s.type === 'laivanrakennus'
-      ? `Tuotantotilojen ahtaus, yövuorot ja alihankkijaverkosto laskevat arvoa tuottavan ajan osuutta entisestään — laivan sisätiloissa hitsaaminen ahtaissa kulmissa lisää sekä virheitä että tapaturmariskiä (Hypertherm 2024 raportoi 6,8x enemmän virheitä korkean ergonomiakuorman tehtävissä).`
-      : `Suunnittelun kypsyys ennen tuotantoon menoa on suurin yksittäinen muuttuja — Cardiff/ORCA 2025 osoitti simulaatiolla, että rework-suhteen lasku 0,5:stä 0,3:een lyhentää toimitusaikaa yli puolella.`;
 
     return {
-      headline: `${typeLabel} tutkimusnäyttö (Fieldwire/LCI) osoittaa, että ${wasteRatioPct} % työajasta menee hukkaan odotteluun, materiaalin etsintään ja uudelleentyöhön. ${co}:n kokoluokassa (${fmtNumber(s.employees)} henkilöä, ${s.shifts} vuoroa) tämä on ${fmtNumber(r.wastedHours)} hukkatuntia, eli ${fmtMoney(r.wastedEuros)} vuodessa, kun kustannustasona käytetään 45 €/h. Tämä on tutkimusperusteinen keskiarvo — todellinen taso voi vaihdella organisaation kypsyyden ja prosessien mukaan ±20 %.`,
-      deviations: `${co}:n vuotuinen poikkeamamäärä on tutkimuspohjaisesti arvioituna ${fmtNumber(r.deviationsPerYear)} kpl. Kriittinen havainto: 41 % poikkeamista toistuu ilman juurisyykorjausta (Taylor & Francis 2025) — eli noin ${fmtNumber(repeating)} tapausta vuodessa ovat saman ongelman uusiutumista, ei uusia. Toistuvuus on suurin yksittäinen hukan kasvattaja, ja juurisyyanalyysin puute on tyypillisin syy: virhe korjataan kerran, mutta sen aiheuttaja jää jäljelle.`,
-      valueTime: `Kolmas keskeinen luku on arvoa tuottavan ajan gap, ${valueTimeGap} prosenttiyksikköä. ${typeLabel === 'Laivanrakennuksen' ? 'Laivanrakennuksessa' : 'Rakentamisessa'} arvoa tuottava aika on tyypillisesti ${String(r.valueTime.current).replace('.', ',')} % (ScienceDirect), kun world-class taso on ${r.valueTime.worldClass} %. ${valueTimeContext}`,
-      context: `${typeContext} Aliraportointi on järjestelmällistä: ASCE 2026 -tutkimus osoittaa, että todelliset poikkeamakustannukset ovat keskimäärin neljä kertaa raportoidun tason — ${co}:n nykyinen mittaus näyttää siis todennäköisesti vain noin neljäsosan kokonaisuudesta. Crosbyn klassinen ITT Corporation -case osoitti, että systemaattisella ohjelmalla poikkeamakustannukset voidaan pienentää 25 %:sta alle 6 %:iin liikevaihdosta — ilman massiivisia investointeja.`
+      headline: `${typeLabel} tutkimusnäyttö (Fieldwire/LCI) osoittaa, että ${wasteRatioPct} % työajasta menee hukkaan odotteluun, materiaalin etsintään ja uudelleentyöhön. ${co}:n kokoluokassa (${fmtNumber(s.employees)} henkilöä, ${s.shifts} vuoroa) tämä on ${fmtNumber(r.wastedHours)} hukkatuntia, eli ${fmtMoney(r.wastedEuros)} vuodessa.`,
+      deviations: `Vuotuinen poikkeamamäärä on tutkimuspohjaisesti ${fmtNumber(r.deviationsPerYear)} kpl. Kriittinen havainto: 41 % poikkeamista toistuu ilman juurisyykorjausta (Taylor & Francis 2025) — eli noin ${fmtNumber(repeating)} tapausta vuodessa ovat saman ongelman uusiutumista. Toistuvuus on suurin yksittäinen hukan kasvattaja.`,
+      piilotehdas: piilotehdas
     };
   }
 
   if (tab === 'fmcg') {
     return {
-      headline: `Päivittäistavaralogistiikan tutkimusnäyttö (McKinsey, Cadre Tech) osoittaa, että ${wasteRatioPct} % työajasta menee hukkaan odotteluun, virheelliseen keräilyyn ja uudelleenkäsittelyyn. ${co}:n kokoluokassa (${fmtNumber(s.employees)} henkilöä, ${s.shifts} vuoroa) tämä on ${fmtNumber(r.wastedHours)} hukkatuntia, eli ${fmtMoney(r.wastedEuros)} vuodessa, kun kustannustasona käytetään 45 €/h. Saapuvan tavaravirran (${fmtNumber(s.ostotilaukset)} ostotilausta/v) ja lähtevän (${fmtNumber(s.myyntitilaukset)} myyntitilausta/v) yhteismäärä luo perustan myös poikkeamavolyymille.`,
-      deviations: `${co}:n vuotuinen poikkeamamäärä on tutkimuspohjaisesti arvioituna ${fmtNumber(r.deviationsPerYear)} kpl. Tämä perustuu McKinseyn 8 %:n virhetasoon ostotilauksissa, säädettynä keräilykompleksisuuden mukaan. Keräilyautomaation aste (${s.automaatio} %) on suurin yksittäinen kerroin — täysin manuaalinen prosessi tuottaa noin kuusinkertaisen virhetason verrattuna täysautomaatioon (Cadre Tech / Dematic dokumentoi 85 %:n virhevähennyksen). Yksittäinen keräilyvirhe maksaa keskimäärin 100 €, mutta volyymillänne kuukausikustannus voi olla kymmeniä tuhansia euroja.`,
-      valueTime: `Kolmas keskeinen luku on arvoa tuottavan ajan gap, ${valueTimeGap} prosenttiyksikköä. Päivittäistavaralogistiikassa arvoa tuottava aika on tyypillisesti ${String(r.valueTime.current).replace('.', ',')} %, kun maailman parhaat keräilyautomaatiolla varustetut varastot yltävät ${r.valueTime.worldClass} %:iin. Erotus syntyy odottelusta, kävelystä keräilypisteiden välillä, virheellisistä lähetyksistä ja niiden uudelleenkäsittelystä — kaikki näistä ovat mitattavissa ja vähennettävissä.`,
-      context: `Virheiden todellinen kustannus on harvoin näkyvissä: tutkimusten mukaan 55 % 3PL-asiakkaista valittaa tietojärjestelmien tuottamasta huonosta laadusta (Chalmers 2012), mutta vain pieni osa näistä virheistä päätyy raportteihin. ${co}:n nykyinen mittaus näyttää todennäköisesti vain murto-osan koko piilotehtaan kustannuksesta. Crosbyn klassinen ITT Corporation -case osoitti, että systemaattisella ohjelmalla poikkeamakustannukset voidaan pienentää 25 %:sta alle 6 %:iin liikevaihdosta.`
+      headline: `Päivittäistavaralogistiikan tutkimusnäyttö (McKinsey, Cadre Tech) osoittaa, että ${wasteRatioPct} % työajasta menee hukkaan odotteluun, virheelliseen keräilyyn ja uudelleenkäsittelyyn. ${co}:n kokoluokassa (${fmtNumber(s.employees)} henkilöä, ${s.shifts} vuoroa) tämä on ${fmtNumber(r.wastedHours)} hukkatuntia, eli ${fmtMoney(r.wastedEuros)} vuodessa.`,
+      deviations: `Vuotuinen poikkeamamäärä on arvioituna ${fmtNumber(r.deviationsPerYear)} kpl. Keräilyautomaation aste (${s.automaatio} %) on suurin yksittäinen kerroin — täysautomaatio leikkaa virheitä 85 % verrattuna manuaaliseen prosessiin (Cadre Tech / Dematic). Yksittäisen keräilyvirheen hinta on noin 100 €, mutta volyymillä se kerääntyy.`,
+      piilotehdas: piilotehdas
     };
   }
 
@@ -1349,15 +1344,14 @@ function getNarrative(tab, companyName, state, r) {
     const materialPctOfRevenue = ((r.materialWaste / (s.revenue * 1000000)) * 100).toFixed(1).replace('.', ',');
 
     return {
-      headline: `Valmistavan teollisuuden tutkimusnäyttö (ASQ, OEE-benchmarkit) osoittaa, että ${wasteRatioPct} % työajasta menee hukkaan asetuksiin, odotteluun, korjauksiin ja seisokkeihin. ${co}:n kokoluokassa (${fmtNumber(s.employees)} henkilöä, ${s.shifts} vuoroa) tämä on ${fmtNumber(r.wastedHours)} hukkatuntia, eli ${fmtMoney(r.wastedEuros)} vuodessa, kun kustannustasona käytetään 45 €/h. Lean-kypsyytenne (taso ${s.maturity}/5, ${maturityLabel}) on suurin yksittäinen hukan kerroin tässä laskelmassa.`,
-      deviations: `${co}:n vuotuinen poikkeamamäärä on tutkimuspohjaisesti arvioituna ${fmtNumber(r.deviationsPerYear)} kpl. Siirtyminen Lean-tasolta ${s.maturity} tasolle ${Math.min(s.maturity + 1, 5)} leikkaisi poikkeamia noin 25 % — ei investoinneilla, vaan systemaattisella menetelmäkehityksellä. Kriittinen havainto: 41 % poikkeamista toistuu ilman juurisyykorjausta (Taylor & Francis 2025), eli noin ${fmtNumber(repeating)} tapausta vuodessa ovat saman ongelman uusiutumista. Hypertherm 2024 -tutkimus osoittaa lisäksi, että reworkia tekevät työntekijät loukkaantuvat kaksi kertaa todennäköisemmin kuin normaalisti työskentelevät.`,
-      valueTime: `Kolmas keskeinen luku on arvoa tuottavan ajan gap, ${valueTimeGap} prosenttiyksikköä. Valmistavan teollisuuden arvoa tuottava aika on tyypillisesti ${String(r.valueTime.current).replace('.', ',')} % (OEE-benchmarkit), kun world-class taso on ${r.valueTime.worldClass} %. Suurimmat selittäjät: pitkät asetusajat, suunnittelemattomat seisokit, raaka-aineen odottelu, korjaustyöt ja informaatiokatkoksista syntyvä uudelleentyö.`,
-      context: `Materiaalihukka on ${fmtMoney(r.materialWaste)} eli ${materialPctOfRevenue} % liikevaihdosta (eMoldino 2025 viittaa 2,2 % keskiarvoon, joka säätyy Lean-kypsyydellä). COPQ-tutkimukset (ASQ/Jama Software 2026) viittaavat siihen, että valmistavalla teollisuudella todellinen huonon laadun kokonaiskustannus on 15-20 % liikevaihdosta — eli mitä laskuri näyttää, voi olla vain puolet todellisuudesta. Crosbyn klassinen ITT Corporation -case osoitti, että systemaattisella ohjelmalla poikkeamakustannukset voidaan pienentää 25 %:sta alle 6 %:iin liikevaihdosta.`
+      headline: `Valmistavan teollisuuden tutkimusnäyttö (ASQ, OEE) osoittaa, että ${wasteRatioPct} % työajasta menee hukkaan asetuksiin, odotteluun ja seisokkeihin. ${co}:n kokoluokassa (${fmtNumber(s.employees)} henkilöä, ${s.shifts} vuoroa) tämä on ${fmtNumber(r.wastedHours)} hukkatuntia, eli ${fmtMoney(r.wastedEuros)} vuodessa. Lean-kypsyytenne (taso ${s.maturity}/5, ${maturityLabel}) on suurin yksittäinen kerroin.`,
+      deviations: `Vuotuinen poikkeamamäärä on arvioituna ${fmtNumber(r.deviationsPerYear)} kpl, lisäksi materiaalihukka ${fmtMoney(r.materialWaste)} (${materialPctOfRevenue} % liikevaihdosta). Siirtyminen Lean-tasolta ${s.maturity} tasolle ${Math.min(s.maturity + 1, 5)} leikkaisi poikkeamia noin 25 % — ei investoinneilla, vaan menetelmäkehityksellä.`,
+      piilotehdas: piilotehdas
     };
   }
 
   // Fallback
-  return { headline: '', deviations: '', valueTime: '', context: '' };
+  return { headline: '', deviations: '', piilotehdas: '' };
 }
 
 // =========================================================================
@@ -1480,8 +1474,7 @@ function generateReport() {
         <div class="rep-section-title">Mitä tämä tarkoittaa</div>
         <p class="rep-narrative-p">${narrative.headline}</p>
         <p class="rep-narrative-p">${narrative.deviations}</p>
-        <p class="rep-narrative-p">${narrative.valueTime}</p>
-        <p class="rep-narrative-p">${narrative.context}</p>
+        <p class="rep-narrative-p">${narrative.piilotehdas}</p>
       </div>
 
       <div class="rep-footer">
